@@ -16,130 +16,95 @@ import com.krakedev.proyectos.security.JwtUtil;
 import com.krakedev.proyectos.services.TokenBlacklistService;
 import com.krakedev.proyectos.services.UsuarioService;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final UsuarioService usuarioService;
-    private final JwtUtil jwtUtil;
-    private final TokenBlacklistService blacklistService;
+	private final UsuarioService usuarioService;
+	private final JwtUtil jwtUtil;
+	private final TokenBlacklistService blacklistService;
 
-    public AuthController(
-            UsuarioService usuarioService,
-            JwtUtil jwtUtil,
-            TokenBlacklistService blacklistService) {
+	public AuthController(UsuarioService usuarioService, JwtUtil jwtUtil, TokenBlacklistService blacklistService) {
 
-        this.usuarioService = usuarioService;
-        this.jwtUtil = jwtUtil;
-        this.blacklistService = blacklistService;
-    }
+		this.usuarioService = usuarioService;
+		this.jwtUtil = jwtUtil;
+		this.blacklistService = blacklistService;
+	}
 
-    @PostMapping("/registrar")
-    public ResponseEntity<?> registrar(
-            @RequestBody Usuario usuario) {
+	@PostMapping("/registrar")
+	public ResponseEntity<?> registrar(@RequestBody Usuario usuario) {
 
-        try {
+		try {
 
-            Usuario nuevo =
-                    usuarioService.guardar(usuario);
+			Usuario nuevo = usuarioService.guardar(usuario);
 
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(Map.of(
-                            "id", nuevo.getId(),
-                            "username", nuevo.getUsername(),
-                            "rol", nuevo.getRol()));
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(Map.of("id", nuevo.getId(), "username", nuevo.getUsername(), "rol", nuevo.getRol()));
 
-        } catch (Exception e) {
+		} catch (Exception e) {
 
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al registrar usuario: "
-                            + e.getMessage());
-        }
-    }
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al registrar usuario: " + e.getMessage());
+		}
+	}
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(
-            @RequestBody Map<String, String> credenciales) {
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody Map<String, String> credenciales) {
 
-        try {
+		try {
 
-            String username =
-                    credenciales.get("username");
+			String username = credenciales.get("username");
 
-            String password =
-                    credenciales.get("password");
+			String password = credenciales.get("password");
 
-            boolean autenticado =
-                    usuarioService.autenticar(
-                            username,
-                            password);
+			boolean autenticado = usuarioService.autenticar(username, password);
 
-            if (!autenticado) {
+			if (!autenticado) {
 
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(
-                            "Usuario o contraseña incorrecta");
-            }
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario o contraseña incorrecta");
+			}
 
-            Usuario usuario =
-                    usuarioService.buscarPorUsername(username);
+			Usuario usuario = usuarioService.buscarPorUsername(username);
 
-            String token = jwtUtil.generarToken(
-                    usuario.getUsername(),
-                    usuario.getRol());
+			String token = jwtUtil.generarToken(usuario.getUsername(), usuario.getRol());
 
-            return ResponseEntity.ok(
-                    Map.of("token", token));
+			return ResponseEntity.ok(Map.of("token", token));
 
-        } catch (Exception e) {
+		} catch (Exception e) {
 
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error durante el login: "
-                            + e.getMessage());
-        }
-    }
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error durante el login: " + e.getMessage());
+		}
+	}
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(
-            @RequestHeader(
-                    value = "Authorization",
-                    required = false)
-            String authHeader) {
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(@RequestHeader(value = "Authorization", required = false) String authHeader) {
 
-        if (authHeader == null
-                || !authHeader.startsWith("Bearer ")) {
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Token no proporcionado");
-        }
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token no proporcionado");
+		}
 
-        String token = authHeader.substring(7);
+		String token = authHeader.substring(7);
 
-        blacklistService.invalidarToken(token);
+		blacklistService.invalidarToken(token);
 
-        return ResponseEntity.ok(
-                Map.of(
-                    "mensaje",
-                    "Sesion cerrada exitosamente. "
-                    + "Token invalidado"));
-    }
+		return ResponseEntity.ok(Map.of("mensaje", "Sesion cerrada exitosamente. " + "Token invalidado"));
+	}
 
-    /*
-     * Este endpoint será reemplazado en el Hito 3
-     * para utilizar Spring Security.
-     */
-    @GetMapping("/perfil")
-    public ResponseEntity<?> perfilTemporal() {
+	@GetMapping("/perfil")
+	public ResponseEntity<?> verPerfil() {
 
-        return ResponseEntity.ok(
-                Map.of(
-                    "mensaje",
-                    "Spring Security se integrara "
-                    + "en el siguiente hito"));
-    }
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		String usuario = auth.getName();
+
+		String rol = auth.getAuthorities().iterator().next().getAuthority();
+
+		return ResponseEntity.ok(Map.of("mensaje", "Bienvenido al sistema protegido " + "por Spring Security",
+				"usuario", usuario, "rol_detectado", rol, "estatus", "Autenticado exitosamente"));
+	}
 }
