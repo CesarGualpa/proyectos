@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.krakedev.proyectos.entidades.Tarea;
 import com.krakedev.proyectos.services.TareaService;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
 @RequestMapping("/api/tareas")
 public class TareaController {
@@ -24,6 +26,7 @@ public class TareaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> guardar(@RequestBody Tarea tarea) {
 
         try {
@@ -58,6 +61,7 @@ public class TareaController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> listar() {
 
         try {
