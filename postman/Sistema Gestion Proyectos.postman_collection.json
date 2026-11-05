@@ -8,253 +8,633 @@
   },
   "item": [
     {
-      "name": "Registrar empleado",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"nombre\": \"Diana Rojas\",\r\n    \"cargo\": \"Desarrollador Senior\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Autenticacion",
+      "item": [
+        {
+          "name": "Registrar ADMIN",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"admin_proyectos\",\r\n    \"password\": \"Admin12345\",\r\n    \"rol\": \"ADMIN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/registrar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "registrar"
+              ]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8080/api/empleados",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "empleados"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Registrar proyecto",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"nombre\": \"E-Commerce Plataforma\",\r\n    \"descripcion\": \"Desarrollo del nuevo portal de ventas online\",\r\n    \"fechaInicio\": \"2026-05-20\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+        {
+          "name": "Login ADMIN",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login ADMIN devuelve 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\"La respuesta contiene token\", function () {\r\n    pm.expect(respuesta).to.have.property(\"token\");\r\n});\r\n\r\npm.collectionVariables.set(\r\n    \"admin_token\",\r\n    respuesta.token\r\n);"
+                ]
+              }
             }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/proyectos",
-          "protocol": "http",
-          "host": [
-            "localhost"
           ],
-          "port": "8080",
-          "path": [
-            "api",
-            "proyectos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Registrar tarea",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"descripcion\": \"Diseñar e implementar el modelo de datos para la base de datos\",\r\n    \"fechaLimite\": \"2026-06-15\",\r\n    \"costoEstimado\": 450.50,\r\n    \"proyecto\": {\r\n        \"id\": 1\r\n    },\r\n    \"empleados\": [\r\n        {\r\n            \"id\": 1\r\n        }\r\n    ]\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"admin_proyectos\",\r\n    \"password\": \"Admin12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8080/api/tareas",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "tareas"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Listar tareas",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/tareas",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "tareas"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Listar proyecto",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/proyectos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "proyectos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Buscar proyecto",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/proyectos/1",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "proyectos",
-            "1"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Actualizar proyecto",
-      "request": {
-        "method": "PUT",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"nombre\": \"E-Commerce Plataforma Actualizada\",\r\n    \"descripcion\": \"Nueva plataforma de ventas online\",\r\n    \"fechaInicio\": \"2026-05-20\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+        {
+          "name": "Registrar USER",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"desarrollador\",\r\n    \"password\": \"User12345\",\r\n    \"rol\": \"USER\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/registrar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "registrar"
+              ]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "http://localhost:8080/api/proyectos/1",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "proyectos",
-            "1"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Listar empleado",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/empleados",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "empleados"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Buscar empleado",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/empleados/1",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "empleados",
-            "1"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Actualizar empleado",
-      "request": {
-        "method": "PUT",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"nombre\": \"Diana Rojas\",\r\n    \"cargo\": \"Arquitecta de Software\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+        {
+          "name": "Login USER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login USER devuelve 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\"La respuesta contiene token\", function () {\r\n    pm.expect(respuesta).to.have.property(\"token\");\r\n});\r\n\r\npm.collectionVariables.set(\r\n    \"user_token\",\r\n    respuesta.token\r\n);"
+                ]
+              }
             }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/empleados/1",
-          "protocol": "http",
-          "host": [
-            "localhost"
           ],
-          "port": "8080",
-          "path": [
-            "api",
-            "empleados",
-            "1"
-          ]
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"desarrollador\",\r\n    \"password\": \"User12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Perfil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Perfil responde 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\"Spring Security detecta USER\", function () {\r\n    pm.expect(respuesta.rol_detectado)\r\n        .to.eql(\"ROLE_USER\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/auth/perfil",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "perfil"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"Logout exitoso\",\r\n    function () {\r\n        pm.response.to.have.status(200);\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
+    },
+    {
+      "name": "Proyectos",
+      "item": [
+        {
+          "name": "Crear Proyecto USER - 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"USER no puede crear proyectos - 403\",\r\n    function () {\r\n        pm.response.to.have.status(403);\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Proyecto Bloqueado USER\",\r\n    \"descripcion\": \"Este proyecto no deberia ser creado por USER\",\r\n    \"fechaInicio\": \"2026-11-05\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/proyectos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "proyectos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Proyecto ADMIN - 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"ADMIN puede crear proyectos\",\r\n    function () {\r\n        pm.response.to.have.status(201);\r\n    }\r\n);\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\r\n    \"El proyecto tiene id\",\r\n    function () {\r\n        pm.expect(respuesta).to.have.property(\"id\");\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Sistema Seguro de Proyectos\",\r\n    \"descripcion\": \"Proyecto creado por usuario ADMIN\",\r\n    \"fechaInicio\": \"2026-11-05\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/proyectos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "proyectos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Proyectos USER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"USER puede listar proyectos\",\r\n    function () {\r\n        pm.response.to.have.status(200);\r\n    }\r\n);\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\r\n    \"La respuesta es un arreglo\",\r\n    function () {\r\n        pm.expect(respuesta).to.be.an(\"array\");\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/proyectos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "proyectos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Proyectos ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"ADMIN puede listar proyectos\",\r\n    function () {\r\n        pm.response.to.have.status(200);\r\n    }\r\n);\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\r\n    \"La respuesta es un arreglo\",\r\n    function () {\r\n        pm.expect(respuesta).to.be.an(\"array\");\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/proyectos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "proyectos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Empleados",
+      "item": [
+        {
+          "name": "Listar Empleados USER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"USER puede listar empleados\",\r\n    function () {\r\n        pm.response.to.have.status(200);\r\n    }\r\n);\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\r\n    \"La respuesta es un arreglo\",\r\n    function () {\r\n        pm.expect(respuesta).to.be.an(\"array\");\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/empleados",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "empleados"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tareas",
+      "item": [
+        {
+          "name": "Crear Tarea USER - 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"USER no puede crear tareas - 403\",\r\n    function () {\r\n        pm.response.to.have.status(403);\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"descripcion\": \"Tarea bloqueada para USER\",\r\n    \"fechaLimite\": \"2026-11-20\",\r\n    \"costoEstimado\": 500.0,\r\n    \"proyecto\": {\r\n        \"id\": 2\r\n    },\r\n    \"empleados\": [\r\n        {\r\n            \"id\": 1\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/tareas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "tareas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Tarea ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"ADMIN puede crear tareas\",\r\n    function () {\r\n        pm.response.to.have.status(201);\r\n    }\r\n);\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\r\n    \"La tarea tiene id\",\r\n    function () {\r\n        pm.expect(respuesta).to.have.property(\"id\");\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"descripcion\": \"Implementar seguridad y roles del sistema\",\r\n    \"fechaLimite\": \"2026-11-25\",\r\n    \"costoEstimado\": 600.0,\r\n    \"proyecto\": {\r\n        \"id\": 1\r\n    },\r\n    \"empleados\": [\r\n        {\r\n            \"id\": 1\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/tareas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "tareas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Tareas USER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\r\n    \"USER puede listar tareas\",\r\n    function () {\r\n        pm.response.to.have.status(200);\r\n    }\r\n);\r\n\r\nconst respuesta = pm.response.json();\r\n\r\npm.test(\r\n    \"La respuesta es un arreglo\",\r\n    function () {\r\n        pm.expect(respuesta).to.be.an(\"array\");\r\n    }\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/tareas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "tareas"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "admin_token",
+      "value": ""
+    },
+    {
+      "key": "user_token",
+      "value": ""
     }
   ]
 }
